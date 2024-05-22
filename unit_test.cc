@@ -2,6 +2,7 @@
 #include <chrono>
 #include <date/date.h>
 #include <date/tz.h>
+#include "gaussian_rng.hpp"
 #include "add.h"
 
 #include <gtest/gtest.h>
@@ -20,5 +21,11 @@ TEST(UnitTest, BasicAssertions)
     EXPECT_EQ (date::year_month_day{future_date}.month(), date::month(8));
 
     EXPECT_EQ(add(2,3), 5);
+}
+
+TEST(UnitTest, RandomNumberGenerator)
+{
+    GaussianRNG g_rng = GaussianRNG(0.0, 1.0);
+    EXPECT_NO_THROW(g_rng.getRandomNumber());
 }
 
