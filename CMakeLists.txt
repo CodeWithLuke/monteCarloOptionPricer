@@ -28,6 +28,11 @@ link_directories($ENV{HOMEBREW_PREFIX}/lib)
 
 add_subdirectory(build/_deps/pybind11-src)
 
+add_library(
+  gaussian_rng
+  gaussian_rng.cc
+)
+
 pybind11_add_module(monte_carlo_option_pricer main.cpp)
 
 enable_testing()
@@ -37,6 +42,7 @@ add_executable(
   unit_test.cc
 )
 target_link_libraries(
+  gaussian_rng
   unit_test
   GTest::gtest_main
 )
