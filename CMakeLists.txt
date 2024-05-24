@@ -24,14 +24,9 @@ FetchContent_Declare(
   DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 FetchContent_MakeAvailable(pybind11)
 FetchContent_MakeAvailable(date)
-
-include_directories($ENV{HOMEBREW_PREFIX}/include)
-link_directories($ENV{HOMEBREW_PREFIX}/lib)
 
 add_subdirectory(build/_deps/pybind11-src)
 
@@ -41,6 +36,7 @@ add_library(
 )
 
 pybind11_add_module(monte_carlo_option_pricer main.cpp)
+target_include_directories(monte_carlo_option_pricer PRIVATE build/_deps/date-src/include)
 
 enable_testing()
 
@@ -48,6 +44,12 @@ add_executable(
   unit_test
   unit_test.cc
 )
+
+target_link_libraries(
+  unit_test
+  date
+)
+
 target_link_libraries(
   unit_test
   gaussian_rng
