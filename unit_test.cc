@@ -15,9 +15,9 @@ TEST(UnitTest, BasicAssertions)
     // Expect equality.
     EXPECT_EQ(7 * 6, 42);
 
-    auto today = date::floor<date::days>(date::clock_cast_detail::system_clock::now());
+    auto test_date = date::sys_days{ date::year{2023}/5/21};
 
-    auto future_date = today + date::days{100};
+    auto future_date = test_date + date::days{100};
     EXPECT_EQ (date::year_month_day{future_date}.month(), date::month(8));
 
     EXPECT_EQ(add(2,3), 5);

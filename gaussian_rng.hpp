@@ -14,7 +14,6 @@ private:
 public:
     GaussianRNG(float mean, float stddev);
     float getRandomNumber();
-    ~GaussianRNG();
 };
 
 #endif

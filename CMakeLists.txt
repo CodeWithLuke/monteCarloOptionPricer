@@ -18,10 +18,17 @@ FetchContent_Declare(
   DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 
+FetchContent_Declare(
+  date
+  URL https://github.com/HowardHinnant/date/archive/refs/tags/v3.0.1.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP true
+)
+
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 FetchContent_MakeAvailable(pybind11)
+FetchContent_MakeAvailable(date)
 
 include_directories($ENV{HOMEBREW_PREFIX}/include)
 link_directories($ENV{HOMEBREW_PREFIX}/lib)
@@ -42,7 +49,11 @@ add_executable(
   unit_test.cc
 )
 target_link_libraries(
+  unit_test
   gaussian_rng
+)
+
+target_link_libraries(
   unit_test
   GTest::gtest_main
 )
