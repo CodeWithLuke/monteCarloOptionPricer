@@ -2,8 +2,10 @@
 #include <chrono>
 #include <date/date.h>
 #include <date/tz.h>
+#include <chrono>
 #include "gaussian_rng.hpp"
 #include "add.h"
+#include "asset_random_walk.h"
 
 #include <gtest/gtest.h>
 
@@ -25,7 +27,13 @@ TEST(UnitTest, BasicAssertions)
 
 TEST(UnitTest, RandomNumberGenerator)
 {
-    GaussianRNG g_rng = GaussianRNG(0.0, 1.0);
-    EXPECT_NO_THROW(g_rng.getRandomNumber());
+    GaussianRNG g_rng = GaussianRNG(0.0, 1.0, 0);
+    EXPECT_NEAR (g_rng.getRandomNumber(), -0.14638178050518036, 1e-6);
 }
 
+TEST(UnitTest, AssetRandomWalk)
+{
+    auto today = floor<date::days>(std::chrono::system_clock::now());
+    auto expiry = floor<date::days>(std::chrono::system_clock::now() + date::years {1});
+    EXPECT_NO_THROW(simulate_asset_random_walk(100.0, today, expiry, 0.15, 0.30));
+}
