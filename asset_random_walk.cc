@@ -4,13 +4,15 @@
 
 #include <thread>
 
+#include <math.h>
+
 #include <date/date.h>
 
 #include "gaussian_rng.hpp"
 
 std::map <date::year_month_day, float> simulate_asset_random_walk_full_path(
     float s_0, date::year_month_day start_date, date::year_month_day end_date, 
-    float drift=0.0, float volatility=1.0)
+    float drift, float volatility)
 {
 
     float ds;
@@ -46,7 +48,7 @@ std::map <date::year_month_day, float> simulate_asset_random_walk_full_path(
 
 float simulate_asset_random_walk(
     float s_0, date::year_month_day start_date, date::year_month_day end_date, 
-    float drift=0.0, float volatility=1.0)
+    float drift, float volatility)
 {
 
     float ds;
@@ -64,9 +66,13 @@ float simulate_asset_random_walk(
             continue;
         }
 
-        ds = drift / 252 + g_rng.getRandomNumber()*volatility;
+        // business day fraction of the year
+        float t = 1.0/252.0;
 
-        s *= ds;
+        ds = drift * t + g_rng.getRandomNumber()*volatility*sqrt(t);
+
+        s *= (1 + ds);
+
         iter_date += date::days{1};
     }
 
@@ -79,7 +85,7 @@ void parallel_random_walk(
     float drift, float volatility, std::vector<float>& result, std::mutex& result_mutex) 
 {
     for (int i = 0; i < partial_n; i++){
-        float partialResult = simulate_asset_random_walk(s_0,  start_date,  end_date, drift=0.0, volatility=1.0);
+        float partialResult = simulate_asset_random_walk(s_0,  start_date,  end_date, drift, volatility);
         std::lock_guard<std::mutex> lock(result_mutex); // Ensure thread-safe access to the result
         result.push_back(partialResult);
     }
@@ -95,7 +101,7 @@ float average(std::vector<float> const& v){
 }
 
 float monte_carlo_random_walk(int n, float s_0, date::year_month_day start_date, date::year_month_day end_date,
-    float drift=0.0, float volatility=1.0) 
+    float drift, float volatility) 
 {
     const int numThreads = 4;
 
