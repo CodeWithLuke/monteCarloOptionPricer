@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.18)
 project(monte_carlo_option_pricer)
 
 # GoogleTest requires at least C++14
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_compile_options("-pthread")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -35,6 +37,13 @@ add_library(
   gaussian_rng.cc
 )
 
+add_library(
+  asset_random_walk
+  asset_random_walk.cc
+)
+
+target_include_directories(asset_random_walk PRIVATE build/_deps/date-src/include)
+
 pybind11_add_module(monte_carlo_option_pricer main.cpp)
 target_include_directories(monte_carlo_option_pricer PRIVATE build/_deps/date-src/include)
 
@@ -43,6 +52,11 @@ enable_testing()
 add_executable(
   unit_test
   unit_test.cc
+)
+
+target_link_libraries(
+  unit_test
+  asset_random_walk
 )
 
 target_link_libraries(
