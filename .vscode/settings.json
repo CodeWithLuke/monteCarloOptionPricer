@@ -61,6 +61,11 @@
         "valarray": "cpp",
         "variant": "cpp",
         "vector": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "future": "cpp",
+        "regex": "cpp",
+        "source_location": "cpp",
+        "span": "cpp",
+        "stack": "cpp"
     }
 }
