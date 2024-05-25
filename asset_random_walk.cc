@@ -103,12 +103,12 @@ float average(std::vector<float> const& v){
 float monte_carlo_random_walk(int n, float s_0, date::year_month_day start_date, date::year_month_day end_date,
     float drift, float volatility) 
 {
-    const int numThreads = 4;
+    const int numThreads = 8;
 
     const int partial_n = (n + numThreads - 1) / numThreads;
 
     std::vector<std::thread> threads;
-    std::vector<float> results(n); // Array to store the results
+    std::vector<float> results; // Array to store the results
     std::mutex result_mutex;
 
     for (int i_thread = 0; i_thread < numThreads; ++i_thread) {
