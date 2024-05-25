@@ -1,5 +1,9 @@
 #include <map>
 
+#include <mutex>
+
+#include <thread>
+
 #include <date/date.h>
 
 #include "gaussian_rng.hpp"
@@ -67,5 +71,51 @@ float simulate_asset_random_walk(
     }
 
     return s;
+
+}
+
+void parallel_random_walk(
+    int partial_n, float s_0, date::year_month_day start_date, date::year_month_day end_date, 
+    float drift, float volatility, std::vector<float>& result, std::mutex& result_mutex) 
+{
+    for (int i = 0; i < partial_n; i++){
+        float partialResult = simulate_asset_random_walk(s_0,  start_date,  end_date, drift=0.0, volatility=1.0);
+        std::lock_guard<std::mutex> lock(result_mutex); // Ensure thread-safe access to the result
+        result.push_back(partialResult);
+    }
+}
+
+float average(std::vector<float> const& v){
+    if(v.empty()){
+        return 0;
+    }
+
+    auto const count = static_cast<float>(v.size());
+    return std::reduce(v.begin(), v.end()) / count;
+}
+
+float monte_carlo_random_walk(int n, float s_0, date::year_month_day start_date, date::year_month_day end_date,
+    float drift=0.0, float volatility=1.0) 
+{
+    const int numThreads = 4;
+
+    const int partial_n = (n + numThreads - 1) / numThreads;
+
+    std::vector<std::thread> threads;
+    std::vector<float> results(n); // Array to store the results
+    std::mutex result_mutex;
+
+    for (int i_thread = 0; i_thread < numThreads; ++i_thread) {
+        threads.emplace_back(
+            parallel_random_walk, partial_n, s_0, start_date, end_date, drift, volatility, std::ref(results), std::ref(result_mutex)
+        );
+    }
+
+        // Wait for all threads to finish
+    for (auto& thread : threads) {
+        thread.join();
+    }
+    
+    return average(results);
 
 }
