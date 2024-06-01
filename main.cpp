@@ -2,13 +2,14 @@
 #include <pybind11/chrono.h>
 
 #include "add.h"
+#include "asset_random_walk.h"
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(monte_carlo_option_pricer, m) {
+PYBIND11_MODULE(monte_carlo_opt_pricer, m) {
     m.doc() = R"pbdoc(
         Pybind11 example plugin
         -----------------------
@@ -32,6 +33,12 @@ PYBIND11_MODULE(monte_carlo_option_pricer, m) {
 
         Some other explanation about the add function.
     )pbdoc");
+
+    // m.def("monte_carlo_random_walk", &calc_monte_carlo_random_walk, R"pbdoc(
+    //     Simulate a random walk many times
+
+    //     Some other explanation about the add function.
+    // )pbdoc");
 
 #ifdef VERSION_INFO
     m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
