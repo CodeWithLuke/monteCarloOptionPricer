@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(monte_carlo_opt_pricer, m) {
+PYBIND11_MODULE(monte_carlo_option_pricer, m) {
     m.doc() = R"pbdoc(
         Pybind11 example plugin
         -----------------------

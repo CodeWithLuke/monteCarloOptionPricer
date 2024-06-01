@@ -44,8 +44,8 @@ add_library(
 
 target_include_directories(asset_random_walk PRIVATE build/_deps/date-src/include)
 
-pybind11_add_module(monte_carlo_opt_pricer src/main.cpp)
-target_include_directories(monte_carlo_opt_pricer PRIVATE build/_deps/date-src/include)
+pybind11_add_module(monte_carlo_option_pricer src/main.cpp)
+target_include_directories(monte_carlo_option_pricer PRIVATE build/_deps/date-src/include)
 
 # if(APPLE)
 #   set_target_properties(${MODULE} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")

@@ -34,13 +34,12 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
 setup(
-    name='my_module',
+    name='monte_carlo_option_pricer',
     version='0.0.1',
-    author='Your Name',
-    author_email='your.email@example.com',
+    author='CodeWithLuke',
     description='A test project using pybind11 and CMake',
     long_description='',
-    ext_modules=[CMakeExtension('my_module')],
+    ext_modules=[CMakeExtension('monte_carlo_option_pricer')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )
