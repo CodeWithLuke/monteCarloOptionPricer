@@ -9,6 +9,8 @@ import monte_carlo_option_pricer
 
 import datetime as dt
 
+#TODO: make this a pytest file
+
 if __name__ == '__main__':
 
     print(monte_carlo_option_pricer.add(2, 3))
