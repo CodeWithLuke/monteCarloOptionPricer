@@ -10,8 +10,8 @@
 
 #include "gaussian_rng.hpp"
 
-std::map <date::year_month_day, float> simulate_asset_random_walk_full_path(
-    float s_0, date::year_month_day start_date, date::year_month_day end_date, 
+std::map <date::sys_days, float> simulate_asset_random_walk_full_path(
+    float s_0, date::sys_days start_date, date::sys_days end_date, 
     float drift, float volatility)
 {
 
@@ -21,7 +21,7 @@ std::map <date::year_month_day, float> simulate_asset_random_walk_full_path(
 
     auto g_rng = GaussianRNG(0.0, 1.0);
 
-    std::map<date::year_month_day, float> day_price_pairs;
+    std::map<date::sys_days, float> day_price_pairs;
 
     auto iter_date =  date::sys_days{start_date};
 
@@ -47,7 +47,7 @@ std::map <date::year_month_day, float> simulate_asset_random_walk_full_path(
 }
 
 float simulate_asset_random_walk(
-    float s_0, date::year_month_day start_date, date::year_month_day end_date, 
+    float s_0, date::sys_days start_date, date::sys_days end_date, 
     float drift, float volatility)
 {
 
@@ -57,7 +57,7 @@ float simulate_asset_random_walk(
 
     auto g_rng = GaussianRNG(0.0, 1.0);
 
-    auto iter_date =  date::sys_days{start_date};
+    auto iter_date =  start_date;
 
     while(iter_date < end_date) {
         date::weekday wd{iter_date};
@@ -81,7 +81,7 @@ float simulate_asset_random_walk(
 }
 
 void parallel_random_walk(
-    int partial_n, float s_0, date::year_month_day start_date, date::year_month_day end_date, 
+    int partial_n, float s_0, date::sys_days start_date, date::sys_days end_date, 
     float drift, float volatility, std::vector<float>& result, std::mutex& result_mutex) 
 {
     for (int i = 0; i < partial_n; i++){
@@ -100,7 +100,7 @@ float average(std::vector<float> const& v){
     return std::reduce(v.begin(), v.end()) / count;
 }
 
-float monte_carlo_random_walk(int n, float s_0, date::year_month_day start_date, date::year_month_day end_date,
+float calc_monte_carlo_random_walk(int n, float s_0, date::sys_days start_date, date::sys_days end_date,
     float drift, float volatility) 
 {
     const int numThreads = 8;

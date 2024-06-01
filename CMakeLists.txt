@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options("-pthread")
+add_compile_options("-F/Library/Frameworks -framework Python")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -38,14 +39,17 @@ add_library(
 )
 
 add_library(
-  asset_random_walk
-  asset_random_walk.cc
+  asset_random_walk asset_random_walk.cc
 )
 
 target_include_directories(asset_random_walk PRIVATE build/_deps/date-src/include)
 
-pybind11_add_module(monte_carlo_option_pricer main.cpp)
-target_include_directories(monte_carlo_option_pricer PRIVATE build/_deps/date-src/include)
+pybind11_add_module(monte_carlo_opt_pricer main.cpp)
+target_include_directories(monte_carlo_opt_pricer PRIVATE build/_deps/date-src/include)
+
+# if(APPLE)
+#   set_target_properties(${MODULE} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+# endif(APPLE)
 
 enable_testing()
 
@@ -55,23 +59,7 @@ add_executable(
 )
 
 target_link_libraries(
-  unit_test
-  asset_random_walk
-)
-
-target_link_libraries(
-  unit_test
-  date
-)
-
-target_link_libraries(
-  unit_test
-  gaussian_rng
-)
-
-target_link_libraries(
-  unit_test
-  GTest::gtest_main
+  unit_test GTest::gtest_main gaussian_rng date asset_random_walk
 )
 
 include(GoogleTest)
