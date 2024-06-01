@@ -35,16 +35,16 @@ add_subdirectory(build/_deps/pybind11-src)
 
 add_library(
   gaussian_rng
-  gaussian_rng.cc
+  src/gaussian_rng.cc
 )
 
 add_library(
-  asset_random_walk asset_random_walk.cc
+  asset_random_walk src/asset_random_walk.cc
 )
 
 target_include_directories(asset_random_walk PRIVATE build/_deps/date-src/include)
 
-pybind11_add_module(monte_carlo_opt_pricer main.cpp)
+pybind11_add_module(monte_carlo_opt_pricer src/main.cpp)
 target_include_directories(monte_carlo_opt_pricer PRIVATE build/_deps/date-src/include)
 
 # if(APPLE)
@@ -55,7 +55,7 @@ enable_testing()
 
 add_executable(
   unit_test
-  unit_test.cc
+  src/unit_test.cc
 )
 
 target_link_libraries(
