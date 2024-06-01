@@ -1,40 +1,46 @@
 import os
+import re
 import sys
+import subprocess
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
-import pybind11
 
-class get_pybind_include(object):
-    """Helper class to determine the pybind11 include path
+class CMakeExtension(Extension):
+    def __init__(self, name, sourcedir=''):
+        super().__init__(name, sources=[])
+        self.sourcedir = os.path.abspath(sourcedir)
 
-    The purpose of this class is to postpone importing pybind11
-    until it is actually installed, so that the `get_include()`
-    method can be invoked. """
+class CMakeBuild(build_ext):
+    def run(self):
+        try:
+            out = subprocess.check_output(['cmake', '--version'])
+        except OSError:
+            raise RuntimeError("CMake must be installed to build the following extensions: " +
+                               ", ".join(e.name for e in self.extensions))
 
-    def __str__(self):
-        return pybind11.get_include()
+        for ext in self.extensions:
+            self.build_extension(ext)
 
-ext_modules = [
-    Extension(
-        'my_module',
-        ['src/my_module.cpp'],
-        include_dirs=[
-            # Path to pybind11 headers
-            get_pybind_include(),
-            get_pybind_include(user=True)
-        ],
-        language='c++'
-    ),
-]
+    def build_extension(self, ext):
+        extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
+                      '-DPYTHON_EXECUTABLE=' + sys.executable]
+
+        build_args = []
+
+        if not os.path.exists(self.build_temp):
+            os.makedirs(self.build_temp)
+        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
 setup(
     name='my_module',
     version='0.0.1',
     author='Your Name',
     author_email='your.email@example.com',
-    description='A test project using pybind11',
+    description='A test project using pybind11 and CMake',
     long_description='',
-    ext_modules=ext_modules,
-    cmdclass={'build_ext': build_ext},
+    ext_modules=[CMakeExtension('my_module')],
+    cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )
