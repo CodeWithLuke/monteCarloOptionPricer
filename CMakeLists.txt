@@ -31,7 +31,7 @@ FetchContent_MakeAvailable(googletest)
 FetchContent_MakeAvailable(pybind11)
 FetchContent_MakeAvailable(date)
 
-add_subdirectory(build/_deps/pybind11-src)
+find_package(pybind11 REQUIRED)
 
 add_library(
   gaussian_rng
@@ -39,13 +39,17 @@ add_library(
 )
 
 add_library(
-  asset_random_walk src/asset_random_walk.cc
+  asset_random_walk SHARED src/asset_random_walk.cc
 )
 
-target_include_directories(asset_random_walk PRIVATE build/_deps/date-src/include)
+target_include_directories(asset_random_walk PRIVATE ${CMAKE_BINARY_DIR}/_deps/date-src/include)
 
 pybind11_add_module(monte_carlo_option_pricer src/main.cpp)
-target_include_directories(monte_carlo_option_pricer PRIVATE build/_deps/date-src/include)
+
+target_link_libraries(monte_carlo_option_pricer PRIVATE asset_random_walk)
+set_target_properties(monte_carlo_option_pricer PROPERTIES PREFIX "")
+
+target_include_directories(monte_carlo_option_pricer PRIVATE ${CMAKE_BINARY_DIR}/_deps/date-src/include)
 
 # if(APPLE)
 #   set_target_properties(${MODULE} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")

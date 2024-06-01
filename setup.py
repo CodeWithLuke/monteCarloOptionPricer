@@ -8,6 +8,7 @@ from setuptools.command.build_ext import build_ext
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         super().__init__(name, sources=[])
+        print(sourcedir)
         self.sourcedir = os.path.abspath(sourcedir)
 
 class CMakeBuild(build_ext):
@@ -19,10 +20,13 @@ class CMakeBuild(build_ext):
                                ", ".join(e.name for e in self.extensions))
 
         for ext in self.extensions:
+            #print(ext.name)
             self.build_extension(ext)
 
     def build_extension(self, ext):
+        #print (self.get_ext_fullpath(ext.name))
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        # print(extdir)
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
@@ -35,7 +39,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='monte_carlo_option_pricer',
-    version='0.0.1',
+    version='0.0.2',
     author='CodeWithLuke',
     description='A test project using pybind11 and CMake',
     long_description='',

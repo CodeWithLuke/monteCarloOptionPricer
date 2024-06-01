@@ -34,11 +34,11 @@ PYBIND11_MODULE(monte_carlo_option_pricer, m) {
         Some other explanation about the add function.
     )pbdoc");
 
-    // m.def("monte_carlo_random_walk", &calc_monte_carlo_random_walk, R"pbdoc(
-    //     Simulate a random walk many times
+    m.def("calc_monte_carlo_random_walk", &calc_monte_carlo_random_walk, R"pbdoc(
+        Simulate a random walk many times
 
-    //     Some other explanation about the add function.
-    // )pbdoc");
+        Some other explanation about the add function.
+    )pbdoc");
 
 #ifdef VERSION_INFO
     m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);

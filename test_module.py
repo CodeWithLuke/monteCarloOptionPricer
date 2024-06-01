@@ -17,7 +17,7 @@ if __name__ == '__main__':
     
     print(monte_carlo_option_pricer.addDays(dt.datetime.now(), 2))
 
-    # print(monte_carlo_option_pricer.calc_monte_carlo_random_walk(2))
+    print(monte_carlo_option_pricer.calc_monte_carlo_random_walk(2))
 
 
 
