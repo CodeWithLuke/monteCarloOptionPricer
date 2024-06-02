@@ -28,7 +28,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
-        python -m pip install pybind11
+        python -m pip install "pybind11[global]"
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Perform PyBind Build
       run: |
