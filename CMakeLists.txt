@@ -31,7 +31,7 @@ FetchContent_MakeAvailable(googletest)
 FetchContent_MakeAvailable(pybind11)
 FetchContent_MakeAvailable(date)
 
-set(pybind11_Dir ${CMAKE_BINARY_DIR}/_deps)
+set(pybind11_Dir ${CMAKE_BINARY_DIR}/_deps/pybind11-src/tools)
 
 find_package(pybind11 REQUIRED)
 
