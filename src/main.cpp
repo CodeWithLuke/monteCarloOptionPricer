@@ -2,6 +2,7 @@
 #include <pybind11/chrono.h>
 
 #include "add.h"
+#include "asset_random_walk.h"
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -29,6 +30,12 @@ PYBIND11_MODULE(monte_carlo_option_pricer, m) {
 
     m.def("addDays", &addDays, R"pbdoc(
         Add days to a date
+
+        Some other explanation about the add function.
+    )pbdoc");
+
+    m.def("calc_monte_carlo_random_walk", &calc_monte_carlo_random_walk, R"pbdoc(
+        Simulate a random walk many times
 
         Some other explanation about the add function.
     )pbdoc");

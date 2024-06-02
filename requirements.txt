@@ -1,0 +1,6 @@
+ghapi==1.0.5
+nox==2024.4.15
+pytest==8.2.1
+rich==13.7.1
+sets==0.3.2
+setuptools==65.5.1

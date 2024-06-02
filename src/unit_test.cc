@@ -34,15 +34,15 @@ TEST(UnitTest, BasicAssertions)
 
 TEST(UnitTest, AssetRandomWalk)
 {
-    auto today = floor<date::days>(std::chrono::system_clock::now());
-    auto expiry = floor<date::days>(std::chrono::system_clock::now() + date::years {1});
+    auto today = date::sys_days{floor<date::days>(std::chrono::system_clock::now())};
+    auto expiry = date::sys_days{floor<date::days>(std::chrono::system_clock::now() + date::years {1})};
     EXPECT_NO_THROW(simulate_asset_random_walk(100.0, today, expiry, 0.15, 0.30));
 }
 
 TEST(UnitTest, MonteCarloRandomWalk)
 {
-    auto today = floor<date::days>(std::chrono::system_clock::now());
-    auto expiry = floor<date::days>(std::chrono::system_clock::now() + date::years {1});
+    auto today = date::sys_days{floor<date::days>(std::chrono::system_clock::now())};
+    auto expiry = date::sys_days{floor<date::days>(std::chrono::system_clock::now() + date::years {1})};
 
-    EXPECT_NO_THROW(monte_carlo_random_walk(100000, 100.0, today, expiry, 0.15, 0.30));
+    EXPECT_NO_THROW(calc_monte_carlo_random_walk(100000, 100.0, today, expiry, 0.15, 0.30));
 }
