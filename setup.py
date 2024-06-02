@@ -61,7 +61,6 @@ setup(
     long_description='',
     ext_modules=[CMakeExtension('monte_carlo_option_pricer')],
     cmdclass=dict(build_ext=CMakeBuild,
-        install=PipInstallCommand,
         uninstall=UninstallCommand
     ),
     zip_safe=False,
