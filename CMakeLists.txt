@@ -44,6 +44,8 @@ add_library(
 
 target_include_directories(asset_random_walk PRIVATE ${CMAKE_BINARY_DIR}/_deps/date-src/include)
 
+target_link_libraries(asset_random_walk gaussian_rng)
+
 pybind11_add_module(monte_carlo_option_pricer src/main.cpp)
 
 target_link_libraries(monte_carlo_option_pricer PRIVATE asset_random_walk)

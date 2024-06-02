@@ -9,15 +9,13 @@ import monte_carlo_option_pricer
 
 import datetime as dt
 
+import pytest
+
 #TODO: make this a pytest file
 
-if __name__ == '__main__':
+def test_monte_carlo_function():
+    today = dt.date.today()
 
-    print(monte_carlo_option_pricer.add(2, 3))
-    
-    print(monte_carlo_option_pricer.addDays(dt.datetime.now(), 2))
+    expiry = today + dt.timedelta(days=100)
 
-    print(monte_carlo_option_pricer.calc_monte_carlo_random_walk(2))
-
-
-
+    monte_carlo_option_pricer.calc_monte_carlo_random_walk(10000, 100.0, today, expiry, 0.15, 0.30)

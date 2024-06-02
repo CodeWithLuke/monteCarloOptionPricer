@@ -3,4 +3,6 @@ build/
 .idea
 *.egg-info
 dist/
-*.so
+__pycache__/
+.pytest_cache/
+venv/
