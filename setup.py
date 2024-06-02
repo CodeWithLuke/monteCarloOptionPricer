@@ -1,9 +1,11 @@
 import os
 import re
 import sys
+import shutil
 import subprocess
-from setuptools import setup, Extension
+from setuptools import setup, Extension, Command
 from setuptools.command.build_ext import build_ext
+from setuptools.command.install import install
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -37,6 +39,20 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
+class UninstallCommand(Command):
+    """Custom uninstall command to remove the package."""
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        subprocess.check_call([sys.executable, '-m', 'pip', 'uninstall', 'monte_carlo_option_pricer'])
+
+
 setup(
     name='monte_carlo_option_pricer',
     version='0.0.2',
@@ -44,6 +60,8 @@ setup(
     description='A test project using pybind11 and CMake',
     long_description='',
     ext_modules=[CMakeExtension('monte_carlo_option_pricer')],
-    cmdclass=dict(build_ext=CMakeBuild),
+    cmdclass=dict(build_ext=CMakeBuild,
+        uninstall=UninstallCommand
+    ),
     zip_safe=False,
 )
