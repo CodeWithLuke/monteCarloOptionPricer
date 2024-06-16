@@ -1,11 +1,8 @@
 import os
-import re
 import sys
-import shutil
 import subprocess
 from setuptools import setup, Extension, Command
 from setuptools.command.build_ext import build_ext
-from setuptools.command.install import install
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -30,7 +27,8 @@ class CMakeBuild(build_ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         # print(extdir)
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                      '-DPYTHON_EXECUTABLE=' + sys.executable]
+                      '-DPYTHON_EXECUTABLE=' + sys.executable,
+                      '-DCMAKE_BUILD_TYPE=Release']
 
         build_args = []
 
@@ -38,6 +36,25 @@ class CMakeBuild(build_ext):
             os.makedirs(self.build_temp)
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+
+        # Run CTest after building the extension
+        subprocess.check_call(['ctest', '--output-on-failure'], cwd=self.build_temp)
+
+
+class CTestCommand(Command):
+    """Custom command to run CTest."""
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        build_temp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'build')
+        # Run CTest in the build directory
+        subprocess.check_call(['ctest', '--output-on-failure'], cwd=build_temp)
 
 class UninstallCommand(Command):
     """Custom uninstall command to remove the package."""
